@@ -11,7 +11,7 @@ import UIKit
 class MasterViewController: UITableViewController {
 
     var detailViewController: DetailViewController? = nil
-    var objects = [AnyObject]()
+    var objects = ["Jorge", "Carlos", "David", "Almudena", "Rafa"]
 
 
     override func viewDidLoad() {
@@ -38,7 +38,7 @@ class MasterViewController: UITableViewController {
     }
 
     func insertNewObject(sender: AnyObject) {
-        objects.insert(NSDate(), atIndex: 0)
+        objects.insert(randomStringWithLength(5) as String, atIndex: 0)
         let indexPath = NSIndexPath(forRow: 0, inSection: 0)
         self.tableView.insertRowsAtIndexPaths([indexPath], withRowAnimation: .Automatic)
     }
@@ -48,7 +48,7 @@ class MasterViewController: UITableViewController {
     override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
         if segue.identifier == "showDetail" {
             if let indexPath = self.tableView.indexPathForSelectedRow {
-                let object = objects[indexPath.row] as! NSDate
+                let object = objects[indexPath.row] as String
                 let controller = (segue.destinationViewController as! UINavigationController).topViewController as! DetailViewController
                 controller.detailItem = object
                 controller.navigationItem.leftBarButtonItem = self.splitViewController?.displayModeButtonItem()
@@ -70,8 +70,7 @@ class MasterViewController: UITableViewController {
     override func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCellWithIdentifier("Cell", forIndexPath: indexPath)
 
-        let object = objects[indexPath.row] as! NSDate
-        cell.textLabel!.text = object.description
+        cell.textLabel!.text = objects[indexPath.row] as String
         return cell
     }
 
@@ -87,6 +86,21 @@ class MasterViewController: UITableViewController {
         } else if editingStyle == .Insert {
             // Create a new instance of the appropriate class, insert it into the array, and add a new row to the table view.
         }
+    }
+    
+    func randomStringWithLength (len : Int) -> NSString {
+        
+        let letters : NSString = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789"
+        
+        let randomString : NSMutableString = NSMutableString(capacity: len)
+        
+        for (var i=0; i < len; i++){
+            let length = UInt32 (letters.length)
+            let rand = arc4random_uniform(length)
+            randomString.appendFormat("%C", letters.characterAtIndex(Int(rand)))
+        }
+        
+        return randomString
     }
 
 
